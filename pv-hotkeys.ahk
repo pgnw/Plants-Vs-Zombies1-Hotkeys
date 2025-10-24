@@ -18,7 +18,7 @@ ClickAndReturn(x, y) {
     MouseGetPos &oldx, &oldy
 
     DllCall("SetCursorPos", "int", x, "int", y)
-    sleep(2)
+    sleep(3)
     Click(true)
     Click(false)
     Sleep(1)
