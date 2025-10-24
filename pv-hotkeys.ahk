@@ -66,5 +66,5 @@ Click(sendDown := true) {
 
 q:: ClickAndReturn(153, 913)
 z:: ClickAndReturn(1626, 86)
-
+e:: ClickAndReturn(1710, 86)
 #HotIf
