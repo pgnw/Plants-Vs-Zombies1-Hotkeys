@@ -9,6 +9,8 @@ MOUSEEVENTF_MOVE := 0x0001
 MOUSEEVENTF_ABSOLUTE := 0x8000
 MOUSEEVENTF_LEFTDOWN := 0x0002
 MOUSEEVENTF_LEFTUP := 0x0004
+MOUSEEVENTF_RIGHTDOWN := 0x0008
+MOUSEEVENTF_RIGHTUP := 0x0010
 
 screenW := A_ScreenWidth
 screenH := A_ScreenHeight
@@ -17,11 +19,15 @@ ClickAndReturn(x, y) {
     local oldx, oldy
     MouseGetPos &oldx, &oldy
 
+    RightClick(true)
+    RightClick(false)
+
+    Sleep(1)
     DllCall("SetCursorPos", "int", x, "int", y)
-    sleep(2)
+    sleep(3)
     Click(true)
     Click(false)
-    Sleep(1)
+    Sleep(2)
     DllCall("SetCursorPos", "int", oldx, "int", oldy)
 
 }
@@ -36,10 +42,36 @@ Click(sendDown := true) {
     NumPut("UInt", 0, inputs, 16)
 
     if (sendDown) {
-        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN, inputs, 20)
+        NumPut("UInt", MOUSEEVENTF_LEFTDOWN, inputs, 20)
     }
     else {
-        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTUP, inputs, 20)
+        NumPut("UInt", MOUSEEVENTF_LEFTUP, inputs, 20)
+    }
+
+    NumPut("UInt", 0, inputs, 24)
+    NumPut("Ptr", 0, inputs, 32)
+
+    DllCall("user32.dll\SendInput"
+        , "UInt", 1
+        , "Ptr", inputs
+        , "Int", 40
+    )
+}
+
+RightClick(sendDown := true) {
+    inputs := Buffer(40, 0)
+
+    NumPut("UInt", INPUT_MOUSE, inputs, 0)
+
+    NumPut("Int", 0, inputs, 8)
+    NumPut("Int", 0, inputs, 12)
+    NumPut("UInt", 0, inputs, 16)
+
+    if (sendDown) {
+        NumPut("UInt", MOUSEEVENTF_RIGHTDOWN, inputs, 20)
+    }
+    else {
+        NumPut("UInt", MOUSEEVENTF_RIGHTUP, inputs, 20)
     }
 
     NumPut("UInt", 0, inputs, 24)
@@ -64,7 +96,7 @@ Click(sendDown := true) {
 9:: ClickAndReturn(1000, 81)
 0:: ClickAndReturn(1060, 81)
 
-q:: ClickAndReturn(153, 913)
+q:: ClickAndReturn(160, 913)
 z:: ClickAndReturn(1626, 86)
 e:: ClickAndReturn(1710, 86)
 #HotIf
