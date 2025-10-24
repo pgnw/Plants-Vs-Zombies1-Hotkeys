@@ -14,31 +14,34 @@ screenW := A_ScreenWidth
 screenH := A_ScreenHeight
 
 ClickAndReturn(x, y) {
-    ;MouseGetPos &xpos, &ypos
+    local oldx, oldy
+    MouseGetPos &oldx, &oldy
 
-    ;Move(x, y, true)
-    ;Move(xpos, ypos, false)
+    DllCall("SetCursorPos", "int", x, "int", y)
+    sleep(1)
+    Click(true)
+    Click(false)
+    Sleep(1)
+    DllCall("SetCursorPos", "int", oldx, "int", oldy)
+
 }
 
-convertCord(num, maxScreen) {
-    return Round(num * (65535 / (maxScreen - 1)))
-}
-
-Move(x, y, click := false) {
-
+Click(sendDown := true) {
     inputs := Buffer(40, 0)
 
     NumPut("UInt", INPUT_MOUSE, inputs, 0)
 
-    NumPut("Int", convertCord(x, A_ScreenWidth), inputs, 8)
-    NumPut("Int", convertCord(y, A_ScreenHeight), inputs, 12)
+    NumPut("Int", 0, inputs, 8)
+    NumPut("Int", 0, inputs, 12)
     NumPut("UInt", 0, inputs, 16)
-    if (click) {
-        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE, inputs, 20)
+
+    if (sendDown) {
+        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN, inputs, 20)
     }
     else {
-        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE, inputs, 20)
+        NumPut("UInt", MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTUP, inputs, 20)
     }
+
     NumPut("UInt", 0, inputs, 24)
     NumPut("Ptr", 0, inputs, 32)
 
