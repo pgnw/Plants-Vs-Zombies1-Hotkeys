@@ -19,20 +19,32 @@ ClickAndReturn(x, y) {
     local oldx, oldy
     MouseGetPos &oldx, &oldy
 
+    Sleep(1)
+    MouseMove(oldx, oldy)
+    Sleep(1)
+    Click("Right")
+    Sleep(1)
+    MouseMove(x, y)
+    Sleep(1)
+    Click("Left")
+    Sleep(1)
+    MouseMove(oldx, oldy)
+
+    /*
     RightClick(true)
     RightClick(false)
-
-    Sleep(1)
+    
+    Sleep(3)
     DllCall("SetCursorPos", "int", x, "int", y)
     sleep(3)
     Click(true)
     Click(false)
     Sleep(2)
     DllCall("SetCursorPos", "int", oldx, "int", oldy)
-
+    */
 }
 
-Click(sendDown := true) {
+Clicka(sendDown := true) {
     inputs := Buffer(40, 0)
 
     NumPut("UInt", INPUT_MOUSE, inputs, 0)
@@ -91,7 +103,7 @@ RightClick(sendDown := true) {
 4:: ClickAndReturn(721, 79)
 5:: ClickAndReturn(760, 77)
 6:: ClickAndReturn(828, 81)
-7:: ClickAndReturn(880, 79)
+7:: ClickAndReturn(900, 79)
 8:: ClickAndReturn(940, 77)
 9:: ClickAndReturn(1000, 81)
 0:: ClickAndReturn(1060, 81)
